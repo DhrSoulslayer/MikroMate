@@ -40,8 +40,7 @@ FROM composer:2 AS composer
 # --- 4. runtime --------------------------------------------------------------
 FROM php:8.4-fpm-bookworm AS runtime
 
-# The servers we run under supervisor (openssl, for the self-signed HTTPS cert, is already
-# in the base image). mtr-tiny backs the live device trace and the Tools traceroute - the
+# The servers we run under supervisor. mtr-tiny backs the live device trace and the Tools traceroute - the
 # distro package is fine here (unlike fping we need no particular version), and its mtr-packet
 # helper ships with cap_net_raw so traces work without extra privileges. iputils-ping backs
 # the Tools ping (the slim base image has no ping).
@@ -99,6 +98,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh \
         storage/framework/views bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
-EXPOSE 80
+EXPOSE 1337
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/mymate.conf"]

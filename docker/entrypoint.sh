@@ -16,22 +16,6 @@ export BROADCAST_CONNECTION="${BROADCAST_CONNECTION:-reverb}"
 # so this only supplies defaults for anything you didn't set.
 [ -f .env ] || cp .env.example .env
 
-# Self-signed cert for the HTTPS listener, unless you've mounted your own at /etc/mymate/tls.
-# Browsers warn once on a self-signed cert; for a trusted one, mount tls.crt/tls.key there or
-# terminate TLS at a proxy in front and expose the HTTP port instead.
-CERT_DIR=/etc/mymate/tls
-if [ ! -s "$CERT_DIR/tls.crt" ] || [ ! -s "$CERT_DIR/tls.key" ]; then
-    mkdir -p "$CERT_DIR"
-    HOST=$(printf '%s' "${APP_URL:-}" | sed -E 's#^https?://##; s#[:/].*$##')
-    [ -z "$HOST" ] && HOST=localhost
-    echo "mymate: generating a self-signed TLS certificate for $HOST"
-    openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
-        -keyout "$CERT_DIR/tls.key" -out "$CERT_DIR/tls.crt" \
-        -subj "/CN=$HOST" -addext "subjectAltName=DNS:$HOST,DNS:localhost,IP:127.0.0.1" >/dev/null 2>&1 \
-        || echo "mymate: WARNING could not generate a TLS cert - HTTPS may not start"
-    chmod 600 "$CERT_DIR/tls.key" 2>/dev/null || true
-fi
-
 # APP_KEY: use the one you passed in; otherwise generate an EPHEMERAL one (set APP_KEY
 # yourself, or mount .env, to keep sessions/encrypted data across restarts).
 if [ -z "${APP_KEY:-}" ] && ! grep -qE '^APP_KEY=base64:.+' .env; then
