@@ -12,7 +12,7 @@
          uploading instead of failing server-side after a long transfer. --}}
     <meta name="mymate:max-upload-kb" content="{{ (int) config('mymate.import.max_upload_kb') }}">
 
-    {{-- Link-preview (Open Graph + Twitter) card --}}
+    {{-- Link-preview Open Graph card --}}
     <meta name="description" content="My Mate - live network monitoring, the modern way. A web-based replacement for MikroTik's The Dude: live topology map, up/down pings, SNMP/RouterOS throughput.">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="My Mate">
@@ -28,10 +28,6 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="My Mate - Network Mate">
-    <meta name="twitter:description" content="Live network monitoring, the modern way.">
-    <meta name="twitter:image" content="{{ url('/og-image.png') }}">
     {{-- Demo mode (sales site): expose the flag + the public read-only viewer creds via
          META TAGS (not an inline <script> - the CSP is `script-src 'self'`, which blocks
          inline scripts). Read from the DOM by features/demo/lib/demo.ts. Only emitted
