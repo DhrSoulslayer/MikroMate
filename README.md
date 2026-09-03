@@ -74,14 +74,14 @@ up the app together with Postgres and Redis:
 ```sh
 docker compose up -d
 docker compose exec app php artisan mymate:user:create --admin
-# open https://localhost:9443   (self-signed cert, so the browser warns once)
+# open http://localhost:1337
 ```
 
-It serves HTTPS on port 9443 by default with a self-signed certificate, on all interfaces.
-Change the port with `MYMATE_HTTPS_PORT`. If you'd rather terminate TLS at a reverse proxy or
-a Cloudflare Tunnel, uncomment the HTTP port in `docker-compose.yml` and expose that instead
-(the app reads `X-Forwarded-Proto`). Set your own `APP_KEY` and `REVERB_APP_SECRET`, and point
-`APP_URL` at the address you actually browse to, before you rely on it.
+It serves plain HTTP on port 1337 by default, on all interfaces. Change the port with
+`MYMATE_HTTP_PORT`. If you want TLS, terminate it at a reverse proxy or a Cloudflare Tunnel in
+front of the container (the app reads `X-Forwarded-Proto`). Set your own `APP_KEY` and
+`REVERB_APP_SECRET`, and point `APP_URL` at the address you actually browse to, before you rely
+on it.
 
 ## Upgrading
 

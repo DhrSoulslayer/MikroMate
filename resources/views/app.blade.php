@@ -12,24 +12,22 @@
          uploading instead of failing server-side after a long transfer. --}}
     <meta name="mymate:max-upload-kb" content="{{ (int) config('mymate.import.max_upload_kb') }}">
 
-    {{-- Link-preview (Open Graph + Twitter) card --}}
+    {{-- Link-preview Open Graph card --}}
     <meta name="description" content="My Mate - live network monitoring, the modern way. A web-based replacement for MikroTik's The Dude: live topology map, up/down pings, SNMP/RouterOS throughput.">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="My Mate">
     <meta property="og:title" content="My Mate - Network Mate">
     <meta property="og:description" content="Live network monitoring, the modern way. Live topology map, up/down pings, and SNMP/RouterOS throughput with a green->red utilisation ramp.">
-    {{-- secure_url() forces https - Slack/social crawlers reject http:// preview images
-         (the app sits behind Cloudflare TLS termination, so url() would emit http). --}}
-    <meta property="og:url" content="{{ secure_url(request()->path()) }}">
-    <meta property="og:image" content="{{ secure_url('/og-image.png') }}">
-    <meta property="og:image:secure_url" content="{{ secure_url('/og-image.png') }}">
+    {{-- Use the current request scheme so plain HTTP installs don't emit broken HTTPS links, while
+         proxied HTTPS still stays secure because the app trusts X-Forwarded-Proto. --}}
+    <meta property="og:url" content="{{ url(request()->path()) }}">
+    <meta property="og:image" content="{{ url('/og-image.png') }}">
+    @if(request()->isSecure())
+        <meta property="og:image:secure_url" content="{{ url('/og-image.png') }}">
+    @endif
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="My Mate - Network Mate">
-    <meta name="twitter:description" content="Live network monitoring, the modern way.">
-    <meta name="twitter:image" content="{{ secure_url('/og-image.png') }}">
     {{-- Demo mode (sales site): expose the flag + the public read-only viewer creds via
          META TAGS (not an inline <script> - the CSP is `script-src 'self'`, which blocks
          inline scripts). Read from the DOM by features/demo/lib/demo.ts. Only emitted
